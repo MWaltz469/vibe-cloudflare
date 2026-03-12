@@ -10,37 +10,29 @@ A static site deployed to Cloudflare Pages. Free tier, always on, no cold starts
 - **Account ID** → Workers & Pages → right sidebar
 - **API Token** → My Profile → API Tokens → Create Token → use **"Edit Cloudflare Workers"** template
 
-### 2. Add Secrets to GitHub
+### 2. Add Secrets & Variables to GitHub
 
-Go to your repo → **Settings** → **Secrets and variables** → **Actions** → add these two:
+Go to your repo → **Settings** → **Secrets and variables** → **Actions**.
 
-| Secret Name | Value |
+**Secrets** tab — add these two:
+
+| Secret | Value |
 |---|---|
 | `CLOUDFLARE_ACCOUNT_ID` | Your account ID |
 | `CLOUDFLARE_API_TOKEN` | The API token you created |
 
-### 3. Configure & Push
+**Variables** tab — add these:
 
-Open `.github/workflows/deploy.yml` and set your project name at the top:
+| Variable | Value | Required |
+|---|---|---|
+| `PROJECT_NAME` | Your project name (becomes `https://<PROJECT_NAME>.pages.dev`) | Yes |
+| `CUSTOM_DOMAIN` | e.g. `mysite.com` or `app.mysite.com` | No |
 
-```yaml
-# ──────────────────────────────────────────────
-# CONFIG — edit these to customize your deploy
-# ──────────────────────────────────────────────
-env:
-  # Project name → becomes https://<PROJECT_NAME>.pages.dev
-  PROJECT_NAME: "vibe-cloudflare"
+### 3. Push to Main
 
-  # Custom domain (optional) — leave empty to skip
-  # e.g. "mysite.com" or "app.mysite.com"
-  CUSTOM_DOMAIN: ""
-```
+That's it. The workflow auto-creates the Cloudflare Pages project and deploys. No dashboard setup needed.
 
-- Change `PROJECT_NAME` to whatever you want → your site goes live at `https://<PROJECT_NAME>.pages.dev`
-- Set `CUSTOM_DOMAIN` if you have a domain on Cloudflare (otherwise leave blank)
-- The project auto-creates on first deploy — no manual setup in the dashboard needed
-
-Push to `main` and you're live.
+Your site goes live at `https://<PROJECT_NAME>.pages.dev`.
 
 ## Project Structure
 

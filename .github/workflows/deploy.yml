@@ -6,16 +6,8 @@ on:
   pull_request:
     branches: [main]
 
-# ──────────────────────────────────────────────
-# CONFIG — edit these to customize your deploy
-# ──────────────────────────────────────────────
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # Project name → becomes https://<PROJECT_NAME>.pages.dev
-  PROJECT_NAME: "vibe-cloudflare"
-  # Custom domain (optional) — leave empty to skip
-  # e.g. "mysite.com" or "app.mysite.com"
-  CUSTOM_DOMAIN: ""
 
 jobs:
   deploy:
@@ -32,7 +24,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project create ${{ env.PROJECT_NAME }} --production-branch=main
+          command: pages project create ${{ vars.PROJECT_NAME }} --production-branch=main
         continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
@@ -40,13 +32,13 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy public --project-name=${{ env.PROJECT_NAME }} --commit-dirty=true
+          command: pages deploy public --project-name=${{ vars.PROJECT_NAME }} --commit-dirty=true
 
       - name: Add custom domain (if set)
-        if: env.CUSTOM_DOMAIN != ''
+        if: vars.CUSTOM_DOMAIN != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project add-domain ${{ env.PROJECT_NAME }} ${{ env.CUSTOM_DOMAIN }}
+          command: pages project add-domain ${{ vars.PROJECT_NAME }} ${{ vars.CUSTOM_DOMAIN }}
         continue-on-error: true
