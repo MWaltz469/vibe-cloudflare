@@ -28,6 +28,7 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -42,3 +43,18 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages project add-domain ${{ vars.PROJECT_NAME }} ${{ vars.CUSTOM_DOMAIN }}
         continue-on-error: true
+
+      - name: Print live URL
+        run: |
+          echo "============================================"
+          echo "  DEPLOYED SUCCESSFULLY"
+          echo "  Live at: https://${{ vars.PROJECT_NAME }}.pages.dev"
+          if [ -n "${{ vars.CUSTOM_DOMAIN }}" ]; then
+            echo "  Custom:  https://${{ vars.CUSTOM_DOMAIN }}"
+          fi
+          echo "============================================"
+          echo ""
+          echo "If the site above doesn't look right, the project"
+          echo "name '${{ vars.PROJECT_NAME }}' may already be taken"
+          echo "by another Cloudflare account. Change PROJECT_NAME"
+          echo "in your repo's GitHub Actions variables to fix this."
